@@ -17,8 +17,7 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 
 
-class LiveReload {
-
+class LiveReload extends DataPipe {
 	public $address;
 	public $lr;
 
@@ -57,10 +56,18 @@ class LiveReload {
 		 */
 	}
 
+	/**
+	 * mark any files received as changed
+	 */
+	public function end($data=null) {
+		$this->fileChanged($data);
+	}
+
 	public function fileChanged($file) {
+		if (is_string($file)) {
+			$file = new \SplFileInfo(getcwd().'/'.$file);
+		}
 		$fname = str_replace(getcwd(), '', $file->getPathName());
-		var_dump($file);
-		var_dump($fname);
 		$this->lr->sendReload($fname);
 	}
 }
