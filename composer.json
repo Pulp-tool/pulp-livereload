@@ -1,0 +1,10 @@
+{
+	"version": "0.1.1",
+	"name":    "pulp-livereload",
+    "autoload": {
+        "psr-0": { "Pulp\\": "src/"}
+    },
+    "require": {
+        "cboden/ratchet": "^0.4.1"
+    }
+}
