@@ -60,6 +60,7 @@ class LiveReload extends DataPipe {
 	 * mark any files received as changed
 	 */
 	public function end($data=null) {
+		if ($data === NULL) { return; }
 		$this->fileChanged($data);
 	}
 
