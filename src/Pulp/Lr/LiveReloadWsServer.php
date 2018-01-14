@@ -16,7 +16,6 @@ class LiveReloadWsServer implements MessageComponentInterface {
     }
 
 	public function sendReload($filePath) {
-		echo "Sending reload to all clients...\n";
 		foreach ($this->clients as $_client) {
 			$_client->send(
 				json_encode( ['command'=>'reload',

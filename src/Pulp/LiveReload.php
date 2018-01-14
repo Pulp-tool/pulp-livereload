@@ -59,9 +59,10 @@ class LiveReload extends DataPipe {
 	/**
 	 * mark any files received as changed
 	 */
-	public function end($data=null) {
+	public function write($data) {
 		if ($data === NULL) { return; }
 		$this->fileChanged($data);
+		$this->emit('log', ['Sending reload because file changed: '.$data->__toString()]);
 	}
 
 	public function fileChanged($file) {
