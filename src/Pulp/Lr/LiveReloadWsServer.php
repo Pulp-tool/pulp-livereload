@@ -28,7 +28,6 @@ class LiveReloadWsServer implements MessageComponentInterface {
 	}
 
     public function onMessage(ConnectionInterface $from, $msg) {
-		var_dump($msg);
 		$msg = json_decode($msg, TRUE);
 		if ($msg['command'] == 'hello') {
 			$from->send(

@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Route;
 class LiveReload extends DataPipe {
 	public $address;
 	public $lr;
+	public $routes;
+	public $staticServer;
 
 	public function __construct($opts=array()) {
 
@@ -33,27 +35,27 @@ class LiveReload extends DataPipe {
 
 	public function listen($loop) {
 
-		$routes = new RouteCollection;
-		$socket = new Reactor($this->address, $loop);
+		$this->routes = new RouteCollection;
+		$socket       = new Reactor($this->address, $loop);
 		$this->lr     = new LiveReloadWsServer();
 
 		$server = new \Ratchet\Server\IoServer(
 			new \Ratchet\Http\HttpServer(
 				new \Ratchet\Http\Router(
-					new \Symfony\Component\Routing\Matcher\UrlMatcher($routes, new RequestContext()))
+					new \Symfony\Component\Routing\Matcher\UrlMatcher($this->routes, new RequestContext()))
 			),
 			$socket,
 			$loop
 		);
 
-		$routes->add('websocket', new Route('/livereload',    ['_controller' => new WsServer($this->lr)]));
-		$routes->add('status',    new Route('/livereload.js', ['_controller' => new StaticServer()]));
+		$this->staticServer = new StaticServer();
+		$this->routes->add('websocket', new Route('/livereload',    ['_controller' => new WsServer($this->lr)]));
+		$this->routes->add('static',    new Route('/{file}', ['_controller' => $this->staticServer]));
 
-		/*
-		$loop->addPeriodicTimer(5.05, function() use($lr) {
-			$lr->sendReload('/templates/sandler/dist/css/site.css');
-		});
-		 */
+	}
+
+	public function addStaticRoute($path, $cb) {
+		$this->staticServer->mapPath($path, $cb);
 	}
 
 	/**
