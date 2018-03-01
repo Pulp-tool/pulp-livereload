@@ -20,3 +20,9 @@ $p->task('less', function() use($p) {
 	});
 });
 ```
+
+Add to your web page
+
+```html
+	<script type="text/javascript"  src="http://localhost:35729/livereload.js"></script>
+```
